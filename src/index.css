@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card {
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  max-height: 600px;
+  min-width: 350px;
+}
+
+@media (min-width: 640px) {
+  .card {
+    height: 340px;
+  }
+}
+
+@media (max-width: 640px) {
+  .card:hover {
+    height: 350px;
+  }
+}
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card:hover .image {
+  height: 150px;
+  text-align: center;
+}
+
+.card:hover .image img {
+  transform: scale(0.7);
+}
+
+.card button {
+  transition: bottom 0.3s ease-in-out;
+  transform: translateY(50%);
+}
+
+.card:hover button {
+  opacity: 1;
+  bottom: 25px;
+  /* animation: 0.3s ease-in-out;
+  -webkit-animation: 0.3s ease-in-out; */
+}
+
+/* details  */
+
+.color-choose::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  opacity: 0;
+}
+
+.color-choose.selected::after {
+  opacity: 1;
+}
+
+option {
+  font-weight: 500;
+  cursor: pointer;
+}
