@@ -1,8 +1,32 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useContext } from "react";
+import { Link, useParams } from "react-router-dom";
+import DetailsContext from "../store/DetailsContext";
+import ProductContext from "../store/ProductContext";
 
-const DetailsList = (props) => {
-  const [isSelected, setIsSelected] = useState({
+const DetailsList = () => {
+  const { products } = useContext(DetailsContext);
+  const { id } = useParams();
+  const product = products.find((product) => product.id === parseInt(id));
+
+  const proContext = useContext(ProductContext);
+  const itemInBasket = proContext.itemInBasket(product.id);
+
+  // Function to handle adding or removing from basket
+  const basketHandler = () => {
+    if (itemInBasket) {
+      proContext.removeFromBasket(product.id);
+    } else {
+      proContext.addToBasket({
+        id: product.id,
+        title: product.title,
+        image: product.image,
+        cost: product.cost,
+      });
+    }
+  };
+
+  // State to manage selected color
+  const [isSelected, setIsSelected] = React.useState({
     black: false,
     purple: false,
     red: false,
@@ -10,6 +34,7 @@ const DetailsList = (props) => {
     brown: false,
   });
 
+  // Color options
   const colors = [
     { name: "black", bgColor: "bg-black" },
     { name: "purple", bgColor: "bg-purple-500" },
@@ -21,12 +46,14 @@ const DetailsList = (props) => {
   // Function to handle click on color options
   const handleClick = (color) => {
     setIsSelected((prevColors) => ({
-      // Reset all colors to false
       ...Object.fromEntries(Object.keys(prevColors).map((key) => [key, false])),
-      // Set the clicked color to true
       [color]: true,
     }));
   };
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="lg:mx-40 sm:mx-28 my-10">
@@ -42,16 +69,18 @@ const DetailsList = (props) => {
         </svg>
         <h3 className="font-bold ml-2">Back To Shop</h3>
       </Link>
-
       {/* Product Details Section */}
-      <div className="shadow-slate-300  border shadow-md flex max-md:flex-col max-md:h-full max-md:m-4 box-border">
+      <div
+        key={product.id}
+        className="shadow-slate-300  border shadow-md flex max-md:flex-col max-md:h-full max-md:m-4 box-border"
+      >
         {/* Product Images */}
         <section className="border-slate-200 border bg-slate-300  flex  sm:shadow-md max-md:flex-col-reverse max-md:mb-4 max-md:shadow-md">
           <div className="bg-white p-3 shadow-slate-500 border max-md:flex max-md:gap-2 xl:flex-col">
             <div>
               <img
-                src={props.image}
-                alt={props.title}
+                src={product.image}
+                alt={product.title}
                 className="border w-40 h-30 cursor-pointer mb-2"
               />
             </div>
@@ -59,8 +88,8 @@ const DetailsList = (props) => {
 
           <div className="bg-slate-100 flex justify-center items-center border">
             <img
-              src={props.image}
-              alt={props.title}
+              src={product.image}
+              alt={product.title}
               className="bg-slate-100 w-max "
             />
           </div>
@@ -70,9 +99,9 @@ const DetailsList = (props) => {
         <section className=" h-full border xl:border-none ">
           <div className="p-6">
             <span className="text-xs mb-1 text-slate-500 font-bold">
-              {props.description}
+              {product.description}
             </span>
-            <h3 className="font-medium text-3xl mb-6">{props.title}</h3>
+            <h3 className="font-medium text-3xl mb-6">{product.title}</h3>
             <p className="text-sm font-medium mb-6">
               Lorem ipsum dolor, sit amet consectetur adipisicing elit.
               Sapiente, vel consequuntur reiciendis aliquam hic corporis
@@ -115,14 +144,15 @@ const DetailsList = (props) => {
             </div>
 
             {/* Product Price */}
-            <div className="text-2xl mt-4 font-medium">{props.cost}</div>
+            <div className="text-2xl mt-4 font-medium">{product.cost}</div>
 
             {/* Add to Basket Button */}
-            <Link to={"/basket"}>
-              <button className="bg-black text-white py-2 px-3 text-sm font-medium mt-3 hover:scale-95">
-                Add To Basket
-              </button>
-            </Link>
+            <button
+              className="bg-black text-white py-2 px-3 text-sm font-medium mt-3 hover:scale-95"
+              onClick={basketHandler}
+            >
+              {itemInBasket ? "Remove From Basket" : "Add to Basket"}
+            </button>
           </div>
         </section>
       </div>
