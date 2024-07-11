@@ -1,9 +1,9 @@
 import Products from "./Products";
 
-const ProductsList = (props) => {
+const ProductsList = ({ products }) => {
   return (
     <ul className="xl:grid xl:grid-cols-4 md:grid md:grid-cols-2 grid sm:justify-center sm:items-center m-6">
-      {props.product.map((product) => (
+      {products.map((product) => (
         <Products
           key={product.id}
           id={product.id}
