@@ -1,11 +1,14 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import ProductContext from "../store/ProductContext";
 
 const MainHeader = () => {
+  const proContext = useContext(ProductContext);
   return (
     <div className=" p-8 bg-slate-200  relative">
       <Link to={"/basket"}>
         <span className="flex align-center justify-center rounded-full text-sm w-5 h-5 bg-red-500 text-white  absolute right-7 top-3 ">
-          1
+          {proContext.total}
         </span>
         <svg
           viewBox="64 64 896 896"
